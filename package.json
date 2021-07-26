@@ -1,0 +1,21 @@
+{
+  "name": "react-navigation-pages",
+  "version": "0.1.0",
+  "description": "Generate navigators for react-navigation from a Pages directory, like Next.js",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "gen-pages-nav": "bin/cli.js"
+  },
+  "scripts": {
+    "build": "esbuild --format=cjs --outdir=dist --out-extension:.js=.cjs src/*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dalci de Jesus Bagolin <dalci.b+npm@gmail.com> (https://github.org/dalcib)",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^15.0.2",
+    "commander": "^7.2.0"
+  }
+}
