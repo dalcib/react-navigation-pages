@@ -1,31 +1,27 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
-    __defProp(target, name, {get: all[name], enumerable: true});
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
-var __reExport = (target, module2, desc) => {
-  if (module2 && typeof module2 === "object" || typeof module2 === "function") {
-    for (let key of __getOwnPropNames(module2))
-      if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, {get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable});
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
-  return target;
+  return to;
 };
-var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? {get: () => module2.default, enumerable: true} : {value: module2, enumerable: true})), module2);
-};
-__markAsModule(exports);
-__export(exports, {
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+var src_exports = {};
+__export(src_exports, {
   default: () => src_default
 });
-var import_fs = __toModule(require("fs"));
-var import_path = __toModule(require("path"));
+module.exports = __toCommonJS(src_exports);
+var import_fs = require("fs");
+var import_path = require("path");
 function camelize(text, upperFirst = true) {
   text = text.replace(/[-_\s./\\]+(.)?/g, (_, c) => c ? c.toUpperCase() : "");
   const firstLetter = upperFirst ? text.substr(0, 1).toUpperCase() : text.substr(0, 1).toLowerCase();
@@ -35,13 +31,13 @@ function pagesForDirectory(dir = "pages", root = "", forceStack = false) {
   const files = (0, import_fs.readdirSync)(dir);
   if (!files.length)
     return null;
-  const results = {pages: [], root};
+  const results = { pages: [], root };
   for (const fileName of files) {
     if (fileName.match(/node_modules/) || fileName.match(/^\./)) {
       continue;
     }
     const filePath = (0, import_path.join)(dir, fileName).split(import_path.sep).join("/");
-    const page = {name: fileName, filePath};
+    const page = { name: fileName, filePath };
     const stats = (0, import_fs.statSync)(filePath);
     if (stats.isDirectory()) {
       const info = pagesForDirectory(filePath, (0, import_path.join)(root || "", fileName), forceStack);
@@ -50,8 +46,8 @@ function pagesForDirectory(dir = "pages", root = "", forceStack = false) {
       }
       page.directoryInfo = info;
     }
-    if (fileName.match(/^_config\.[j|t]s[x|on]?$/)) {
-      const configContent = (0, import_fs.readFileSync)((0, import_path.resolve)(filePath), {encoding: "utf8"});
+    if (fileName.match(/^_config\.[j|t]s(x|on)?$/)) {
+      const configContent = (0, import_fs.readFileSync)((0, import_path.resolve)(filePath), { encoding: "utf8" });
       const navigator = configContent.match(/['"]?navigator['"]?\s*:\s*['"](.*)['"]/);
       if (navigator)
         results.navigator = navigator[1];
@@ -85,14 +81,15 @@ function buildNavigator(info, destDir) {
   const ScreenNavigator = info.root ? camelize(info.root) + "Screen" : "AutoNavigation";
   navigators.push(type);
   const screens = [];
-  for (const {name, filePath, directoryInfo} of info.pages) {
+  for (const { name, filePath, directoryInfo } of info.pages) {
     let component;
     const key = name.includes(".") ? name.split(".").slice(0, -1).join(".") : name;
     if (directoryInfo) {
       screenNavigators.push(buildNavigator(directoryInfo, destDir));
       component = camelize(directoryInfo.root) + "Screen";
     } else {
-      const path = (0, import_path.relative)(destDir, filePath).split(import_path.sep).join("/").split(".").slice(0, -1).join(".");
+      let path = "./" + (0, import_path.relative)(destDir, filePath).split(import_path.sep).join("/");
+      path = name.endsWith(".json") ? path : path.split(".").slice(0, -1).join(".");
       paths.push(path);
       component = camelize(path);
       if (name.startsWith("_navigator")) {
@@ -152,6 +149,5 @@ enableScreens();
     ].join("\n");
   }
   const code = generateCode();
-  console.log("x..");
   return code;
 }
