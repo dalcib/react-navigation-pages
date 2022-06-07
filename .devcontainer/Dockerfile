@@ -19,8 +19,8 @@ ARG NODE_MODULES="fast-watch"
 RUN su node -c "umask 0002 && npm install -g ${NODE_MODULES}" \
     && npm cache clean --force > /dev/null 2>&1
 
-ENV DENO_INSTALL=/deno
-RUN mkdir -p /deno \
+ENV DENO_INSTALL=/workspaces/deno
+RUN mkdir -p /workspaces/deno \
     && curl -fsSL https://deno.land/x/install/install.sh | sh 
 #    && chown -R vscode /deno
 

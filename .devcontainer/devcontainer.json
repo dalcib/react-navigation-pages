@@ -17,8 +17,8 @@
     // Configure properties specific to VS Code.
     "vscode": {
       "settings": {
-        "deno.path": "/deno/bin/deno",
-        "deno.cache": "/deno/.cache/deno"
+        "deno.path": "/workspaces/deno/bin/deno",
+        "deno.cache": "/workspaces/deno/.cache/deno"
         // Enables the project as a Deno project
         //"deno.enable": true,
         // Enables Deno linting for the project
